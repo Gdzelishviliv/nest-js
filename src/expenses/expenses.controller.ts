@@ -37,11 +37,20 @@ export class ExpensesContoller {
 
   @Put('expenses/:id')
   update(@Param('id') id: string, @Body() expense: Expense) {
+    if (!this.expensesService.update(id, expense)) {
+      throw new HttpException('Expense not found', HttpStatus.BAD_REQUEST);
+    }
     return this.expensesService.update(id, expense);
   }
 
   @Delete('expenses/:id')
   delete(@Param('id') id: string) {
-    return this.expensesService.delete(id);
+    if (!this.expensesService.delete(id)) {
+      throw new HttpException('Expense not found', HttpStatus.BAD_REQUEST);
+    } else {
+        console.log("expense deleted on ->",id)
+      return `Expense deleted successfully on id ->${id}`;
+    }
+    // return this.expensesService.delete(id);
   }
 }
